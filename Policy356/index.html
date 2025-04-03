@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CulinaryQuest | Kitchen Masters Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel='icon' href='/src/icons/logo.png' type='image/x-icon'>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .title-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .polygon-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='pattern' width='100' height='100' patternUnits='userSpaceOnUse'%3E%3Cpolygon points='0,0 50,0 25,50' fill='%23f1f1f1'/%3E%3Cpolygon points='50,0 100,0 75,50' fill='%23e5e5e5'/%3E%3Cpolygon points='25,50 75,50 50,100' fill='%23f8f8f8'/%3E%3Cpolygon points='0,0 25,50 0,100' fill='%23ebebeb'/%3E%3Cpolygon points='75,50 100,0 100,100' fill='%23dedede'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23pattern)'/%3E%3C/svg%3E");
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .polygon-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(235, 115, 124, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        /* Animation for icon containers */
+        .w-8:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Highlight effect for section containers on hover */
+        .border.border-tertiary:hover {
+            border-color: #eb737c;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+
+
+            h2.text-3xl {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#eb737c',
+                        secondary: '#778377',
+                        tertiary: '#a4a89d',
+                        light: '#ffffff'
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': {
+                                transform: 'translateY(0)'
+                            },
+                            '50%': {
+                                transform: 'translateY(-10px)'
+                            },
+                        }
+                    }
+                }
+            }
+        }
+
+        // Create stars
+        document.addEventListener('DOMContentLoaded', function() {
+            const starsContainer = document.getElementById('stars-container');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        });
+    </script>
+</head>
+
+<body class="bg-light">
+    <!-- Stars Container -->
+    <div id="stars-container" class="fixed inset-0 z-0 pointer-events-none"></div>
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white bg-opacity-90 backdrop-blur-md border-b border-tertiary">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-none bg-primary flex items-center justify-center animate-float border border-secondary">
+                    <i class="fas fa-utensils text-white text-2xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-primary title-font tracking-wider">CULINARY<span class="text-secondary">QUEST</span></span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="/#hero" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    HOME
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#features" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    FEATURES
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#characters" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    MASTERS
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#destinations" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    DESTINATIONS
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#community" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    COMMUNITY
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+            </nav>
+
+            <!-- Download Button -->
+            <a href="/#download" class="hidden md:block px-6 py-2 bg-primary text-white font-bold tracking-wide border border-primary hover:bg-transparent hover:text-primary transition-all duration-300">
+                DOWNLOAD NOW
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-secondary hover:text-primary transition-colors duration-300">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+    <!-- Privacy Policy Hero Section -->
+    <section class="min-h-[50vh] pt-32 pb-16 flex items-center relative polygon-bg">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-thin title-font tracking-widest text-secondary mb-6">
+                    <span class="text-primary">PRIVACY</span> POLICY
+                </h1>
+                <div class="w-24 h-1 bg-primary mx-auto mb-8"></div>
+                <p class="text-xl font-light text-tertiary mb-8">
+                    At CulinaryQuest, your privacy is a top priority. This policy outlines how we collect and use information.
+                </p>
+            </div>
+        </div>
+        <!-- Diagonal Divider -->
+        <div class="absolute bottom-0 left-0 w-full h-16 bg-white transform -skew-y-2"></div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="border-l-4 border-primary pl-6 mb-12">
+                    <p class="text-lg font-light text-tertiary">
+                        At CulinaryQuest, accessible from https://winnerbestchoice-game.com/, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that are collected and recorded by CulinaryQuest and how we use it.
+                    </p>
+                    <p class="text-lg font-light text-tertiary mt-4">
+                        If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.
+                    </p>
+                </div>
+
+                <!-- Log Files Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-file-alt text-white"></i>
+                        </div>
+                        LOG FILES
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            CulinaryQuest follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and are a part of hosting services' analytics. The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks.
+                        </p>
+                        <p class="text-tertiary font-light">
+                            These are not linked to any personally identifiable information. The purpose of the information is to analyze trends, administer the site, track users' movement on the website, and gather demographic information. Our Privacy Policy was created with the help of the Privacy Policy Generator.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Cookies Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-cookie text-white"></i>
+                        </div>
+                        COOKIES AND WEB BEACONS
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            Like any other website, CulinaryQuest uses "cookies". These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.
+                        </p>
+                        <p class="text-tertiary font-light">
+                            For more general information on cookies, please read the "Cookies" article from the Privacy Policy Generator.
+                        </p>
+                    </div>
+                </div>
+                <!-- Google DART Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fab fa-google text-white"></i>
+                        </div>
+                        GOOGLE DOUBLECLICK DART COOKIE
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            Google is one of the third-party vendors on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to www.website.com and other sites on the internet.
+                        </p>
+                        <p class="text-tertiary font-light">
+                            However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL –
+                            <a href="https://policies.google.com/technologies/ads" class="text-primary hover:underline transition-all duration-300" target="_blank">
+                                https://policies.google.com/technologies/ads
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Advertising Partners Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-handshake text-white"></i>
+                        </div>
+                        OUR ADVERTISING PARTNERS
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            Some of the advertisers on our site may use cookies and web beacons. Our advertising partners are listed below. Each of our advertising partners has its own Privacy Policy for their policies on user data. For easier access, we hyperlinked to their Privacy Policies below.
+                        </p>
+                        <div class="mt-6">
+                            <div class="flex items-center mb-2">
+                                <div class="w-2 h-2 bg-primary mr-2"></div>
+                                <span class="text-secondary font-medium">Google</span>
+                            </div>
+                            <a href="https://policies.google.com/technologies/ads" class="text-primary hover:underline transition-all duration-300 ml-4" target="_blank">
+                                https://policies.google.com/technologies/ads
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Policies Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-white"></i>
+                        </div>
+                        PRIVACY POLICIES
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            You may consult this list to find the Privacy Policy for each of the advertising partners of CulinaryQuest.
+                        </p>
+                        <p class="text-tertiary font-light mb-4">
+                            Third-party ad servers or ad networks use technologies like cookies, JavaScript, or Web Beacons that are used in their respective advertisements and links that appear on CulinaryQuest, which are sent directly to users' browsers. They automatically receive your IP address when this occurs. These technologies are used to measure the effectiveness of their advertising campaigns and/or to personalize the advertising content that you see on websites that you visit.
+                        </p>
+                        <p class="text-tertiary font-light">
+                            Note that CulinaryQuest has no access to or control over these cookies that are used by third-party advertisers.
+                        </p>
+                    </div>
+                </div>
+                <!-- Third Party Privacy Policies Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-user-shield text-white"></i>
+                        </div>
+                        THIRD PARTY PRIVACY POLICIES
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            CulinaryQuest's Privacy Policy does not apply to other advertisers or websites. Thus, we are advising you to consult the respective Privacy Policies of these third-party ad servers for more detailed information. It may include their practices and instructions about how to opt out of certain options.
+                        </p>
+                        <p class="text-tertiary font-light">
+                            You can choose to disable cookies through your browser options. More detailed information about cookie management with specific web browsers can be found at the browsers' respective websites.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Children's Information Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-child text-white"></i>
+                        </div>
+                        CHILDREN'S INFORMATION
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.
+                        </p>
+                        <p class="text-tertiary font-light">
+                            CulinaryQuest does not knowingly collect any personally identifiable information from children under the age of 13. If you think that your child provided this kind of information on our website, we strongly encourage you to contact us.
+                        </p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-tertiary py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo and Copyright -->
+                <div class="mb-6 md:mb-0">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-none bg-primary flex items-center justify-center">
+                            <i class="fas fa-utensils text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-primary title-font tracking-wider">CULINARY<span class="text-secondary">QUEST</span></span>
+                    </a>
+                    <p class="text-tertiary mt-2">
+                        © 2025 CulinaryQuest. All rights reserved.
+                    </p>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="flex flex-wrap justify-center gap-6">
+                    <a href="/Policy356/" class="text-secondary hover:text-primary transition-colors duration-300">Privacy Policy</a>
+                    <a href="/Service347/" class="text-secondary hover:text-primary transition-colors duration-300">Terms of Use</a>
+                    <a href="/Cookie992/" class="text-secondary hover:text-primary transition-colors duration-300">Cookie Policy</a>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Navigation Menu (Hidden by default) -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="mobile-menu-overlay">
+        <div class="h-full w-64 bg-white p-6 transform translate-x-0">
+            <div class="flex justify-between items-center mb-8">
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-none bg-primary flex items-center justify-center">
+                        <i class="fas fa-utensils text-white text-sm"></i>
+                    </div>
+                    <span class="text-lg font-bold text-primary title-font tracking-wider">CQ</span>
+                </a>
+                <button id="close-mobile-menu" class="text-secondary hover:text-primary transition-colors duration-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex flex-col space-y-4">
+                <a href="/#hero" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    HOME
+                </a>
+                <a href="/#features" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    FEATURES
+                </a>
+                <a href="/#characters" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    MASTERS
+                </a>
+                <a href="/#destinations" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    DESTINATIONS
+                </a>
+                <a href="/#community" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    COMMUNITY
+                </a>
+                <a href="/#download" class="mt-4 px-6 py-2 bg-primary text-white font-bold tracking-wide border border-primary text-center">
+                    DOWNLOAD NOW
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('.md\\:hidden');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+            if (mobileMenuButton && mobileMenuOverlay && closeMobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenuOverlay.classList.remove('hidden');
+                });
+
+                closeMobileMenu.addEventListener('click', function() {
+                    mobileMenuOverlay.classList.add('hidden');
+                });
+
+                // Close menu when clicking on mobile navigation links
+                const mobileNavLinks = mobileMenuOverlay.querySelectorAll('nav a');
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenuOverlay.classList.add('hidden');
+                    });
+                });
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+<?php
+$cookieConsentHtml = '
+<style>
+.cookie-consent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 101;
+    background: rgba(119, 131, 119, 0.95); /* Using secondary color with transparency */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    transform: translateY(100%);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border-top: 3px solid #eb737c; /* Using primary color */
+}
+
+.cookie-container {
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cookie-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.cookie-title {
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.1rem;
+    color: #ffffff;
+    font-weight: 300; /* Light font weight */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-right: 1.5rem;
+    margin-bottom: 0;
+    white-space: nowrap;
+    letter-spacing: 0.1em; /* Added letter spacing for the futuristic look */
+    text-transform: uppercase;
+}
+
+.cookie-title i {
+    color: #eb737c; /* Primary color for icon */
+    font-size: 1.25rem;
+}
+
+.cookie-text {
+    color: #ffffff; /* White text for better contrast */
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 300; /* Light font weight */
+    letter-spacing: 0.02em; /* Slight letter spacing */
+    font-family: "Rajdhani", sans-serif;
+}
+
+.cookie-link {
+    color: #eb737c; /* Primary color for links */
+    text-decoration: none;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.cookie-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #eb737c; /* Primary color underline */
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.cookie-link:hover::after {
+    transform: scaleX(1);
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.cookie-button-reject,
+.cookie-button-accept {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 300; /* Light font weight */
+    font-family: "Rajdhani", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0; /* Removed rounded corners for minimalist style */
+    letter-spacing: 0.05em; /* Letter spacing for buttons */
+    text-transform: uppercase;
+}
+
+.cookie-button-reject {
+    background: transparent; /* Transparent background */
+    color: #ffffff;
+    border: 1px solid #ffffff; /* Thin white border */
+}
+
+.cookie-button-reject:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    border-color: #eb737c; /* Primary color on hover */
+}
+
+.cookie-button-accept {
+    background: #eb737c; /* Primary color button */
+    color: #ffffff; /* White text */
+    border: 1px solid #eb737c;
+    font-weight: 300;
+}
+
+.cookie-button-accept:hover {
+    background: transparent;
+    color: #eb737c;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+    .cookie-container {
+        flex-direction: column;
+        padding: 1.25rem;
+    }
+
+    .cookie-content {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 1.25rem;
+        width: 100%;
+    }
+
+    .cookie-title {
+        margin-bottom: 0.75rem;
+    }
+
+    .cookie-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 576px) {
+    .cookie-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+    
+    .cookie-button-reject,
+    .cookie-button-accept {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+<div id="cookieConsent" class="cookie-consent">
+    <div class="cookie-container">
+        <div class="cookie-content">
+            <h3 class="cookie-title">
+                <i class="fas fa-cookie-bite"></i>
+                Cookie Policy
+            </h3>
+            <p class="cookie-text">
+                CulinaryQuest uses cookies to enhance your gaming experience. By continuing to use our website, you agree to the use of cookies. For more information, you can read our
+                <a href="/Policy356/" class="cookie-link">Privacy Policy</a>,
+                <a href="/Service347/" class="cookie-link">Terms of Service</a>,
+                and
+                <a href="/Cookie992/" class="cookie-link">Cookie Policy</a>.
+            </p>
+        </div>
+        
+        <div class="cookie-buttons">
+            <button id="rejectCookies" class="cookie-button-reject">
+                Reject
+            </button>
+            <button id="acceptCookies" class="cookie-button-accept">
+                Accept
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+   const cookieConsent = document.getElementById("cookieConsent");
+   const acceptBtn = document.getElementById("acceptCookies");
+   const rejectBtn = document.getElementById("rejectCookies");
+   
+   if (!getCookie("aprenderd_cookie_consent")) {
+       setTimeout(() => {
+           cookieConsent.style.transform = "translateX(0)";
+       }, 1000);
+   }
+
+   function getCookie(name) {
+       let matches = document.cookie.match(new RegExp(
+           "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"
+       ));
+       return matches ? decodeURIComponent(matches[1]) : undefined;
+   }
+   
+   function setCookie(name, value, days) {
+       const date = new Date();
+       date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+       const expires = "; expires=" + date.toUTCString();
+       document.cookie = name + "=" + value + expires + "; path=/; SameSite=Strict; Secure";
+   }
+
+   function handleConsent(consent) {
+       setCookie("aprenderd_cookie_consent", consent, 365);
+       cookieConsent.style.transform = "translateX(120%)";
+       
+       setTimeout(() => {
+           cookieConsent.remove();
+       }, 500);
+   }
+
+   acceptBtn.addEventListener("click", () => handleConsent("accepted"));
+   rejectBtn.addEventListener("click", () => handleConsent("rejected"));
+});
+</script>
+';
+
+if (!isset($_COOKIE["aprenderd_cookie_consent"])) {
+    echo $cookieConsentHtml;
+}
+?>

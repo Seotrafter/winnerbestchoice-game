@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CulinaryQuest | Kitchen Masters Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel='icon' href='/src/icons/logo.png' type='image/x-icon'>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .title-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .polygon-bg {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='pattern' width='100' height='100' patternUnits='userSpaceOnUse'%3E%3Cpolygon points='0,0 50,0 25,50' fill='%23f1f1f1'/%3E%3Cpolygon points='50,0 100,0 75,50' fill='%23e5e5e5'/%3E%3Cpolygon points='25,50 75,50 50,100' fill='%23f8f8f8'/%3E%3Cpolygon points='0,0 25,50 0,100' fill='%23ebebeb'/%3E%3Cpolygon points='75,50 100,0 100,100' fill='%23dedede'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23pattern)'/%3E%3C/svg%3E");
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .polygon-bg::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(circle, rgba(235, 115, 124, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        /* Animation for icon containers */
+        .w-8:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Highlight effect for section containers on hover */
+        .border.border-tertiary:hover {
+            border-color: #eb737c;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Animated line under section headers */
+        h2.text-3xl::after {
+            content: "";
+            display: block;
+            width: 0;
+            height: 1px;
+            background: #eb737c;
+            transition: width 0.5s ease;
+            margin-top: 8px;
+            margin-left: 48px;
+        }
+
+        h2.text-3xl:hover::after {
+            width: 100px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+
+
+            h2.text-3xl {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#eb737c',
+                        secondary: '#778377',
+                        tertiary: '#a4a89d',
+                        light: '#ffffff'
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': {
+                                transform: 'translateY(0)'
+                            },
+                            '50%': {
+                                transform: 'translateY(-10px)'
+                            },
+                        }
+                    }
+                }
+            }
+        }
+
+        // Create stars
+        document.addEventListener('DOMContentLoaded', function() {
+            const starsContainer = document.getElementById('stars-container');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        });
+    </script>
+</head>
+
+<body class="bg-light">
+    <!-- Stars Container -->
+    <div id="stars-container" class="fixed inset-0 z-0 pointer-events-none"></div>
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white bg-opacity-90 backdrop-blur-md border-b border-tertiary">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-none bg-primary flex items-center justify-center animate-float border border-secondary">
+                    <i class="fas fa-utensils text-white text-2xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-primary title-font tracking-wider">CULINARY<span class="text-secondary">QUEST</span></span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="/#hero" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    HOME
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#features" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    FEATURES
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#characters" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    MASTERS
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#destinations" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    DESTINATIONS
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="/#community" class="text-secondary hover:text-primary tracking-wide transition-all duration-300 text-lg relative group">
+                    COMMUNITY
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
+                </a>
+            </nav>
+
+            <!-- Download Button -->
+            <a href="/#download" class="hidden md:block px-6 py-2 bg-primary text-white font-bold tracking-wide border border-primary hover:bg-transparent hover:text-primary transition-all duration-300">
+                DOWNLOAD NOW
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden text-secondary hover:text-primary transition-colors duration-300">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+    <!-- Terms and Conditions Hero Section -->
+    <section class="min-h-[50vh] pt-32 pb-16 flex items-center relative polygon-bg">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl md:text-6xl font-thin title-font tracking-widest text-secondary mb-6">
+                    <span class="text-primary">TERMS</span> AND CONDITIONS
+                </h1>
+                <div class="w-24 h-1 bg-primary mx-auto mb-8"></div>
+                <p class="text-xl font-light text-tertiary mb-8">
+                    Welcome to CulinaryQuest! Please read these terms and conditions carefully before using our services.
+                </p>
+            </div>
+        </div>
+        <!-- Diagonal Divider -->
+        <div class="absolute bottom-0 left-0 w-full h-16 bg-white transform -skew-y-2"></div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="border-l-4 border-primary pl-6 mb-12">
+                    <p class="text-lg font-light text-tertiary mb-4">
+                        These terms and conditions outline the rules and regulations for the use of CulinaryQuest's Website, located at https://winnerbestchoice-game.com/.
+                    </p>
+                    <p class="text-lg font-light text-tertiary mb-4">
+                        By accessing this website, we assume you accept these terms and conditions. Do not continue to use CulinaryQuest if you do not agree to take all of the terms and conditions stated on this page.
+                    </p>
+                    <p class="text-lg font-light text-tertiary">
+                        The following terminology applies to these Terms and Conditions, Privacy Statement, and Disclaimer Notice and all Agreements: "Client", "You", and "Your" refers to you, the person logging on to this website and compliant with the Company's terms and conditions. "The Company", "Ourselves", "We", "Our", and "Us" refers to our Company. "Party", "Parties", or "Us" refers to both the Client and ourselves. All terms refer to the offer, acceptance, and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client's needs in respect of the provision of the Company's stated services, in accordance with and subject to, prevailing law of the Netherlands. Any use of the above terminology or other words in the singular, plural, capitalization, and/or he/she or they, are taken as interchangeable and therefore as referring to the same.
+                    </p>
+                </div>
+
+                <!-- Cookies Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-cookie text-white"></i>
+                        </div>
+                        COOKIES
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            We employ the use of cookies. By accessing CulinaryQuest, you agreed to use cookies in agreement with CulinaryQuest's Privacy Policy.
+                        </p>
+                        <p class="text-tertiary font-light">
+                            Most interactive websites use cookies to let us retrieve the user's details for each visit. Cookies are used by our website to enable the functionality of certain areas to make it easier for people visiting our website. Some of our affiliate/advertising partners may also use cookies.
+                        </p>
+                    </div>
+                </div>
+                <!-- License Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-certificate text-white"></i>
+                        </div>
+                        LICENSE
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            Unless otherwise stated, CulinaryQuest and/or its licensors own the intellectual property rights for all material on CulinaryQuest. All intellectual property rights are reserved. You may access this from CulinaryQuest for your own personal use subject to restrictions set in these terms and conditions.
+                        </p>
+                        <p class="text-tertiary font-light mb-4">
+                            You must not:
+                        </p>
+
+                        <ul class="list-none space-y-3 ml-4 mb-6">
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Republish material from CulinaryQuest</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Sell, rent, or sub-license material from CulinaryQuest</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Reproduce, duplicate, or copy material from CulinaryQuest</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Redistribute content from CulinaryQuest</span>
+                            </li>
+                        </ul>
+
+                        <p class="text-tertiary font-light">
+                            This Agreement shall begin on the date hereof.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- User Comments Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-comments text-white"></i>
+                        </div>
+                        USER COMMENTS
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            Parts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. CulinaryQuest does not filter, edit, publish, or review Comments prior to their presence on the website. Comments do not reflect the views and opinions of CulinaryQuest, its agents, and/or affiliates. Comments reflect the views and opinions of the person who posts their views and opinions. To the extent permitted by applicable laws, CulinaryQuest shall not be liable for the Comments or for any liability, damages, or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this website.
+                        </p>
+                        <p class="text-tertiary font-light mb-4">
+                            CulinaryQuest reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive, or cause a breach of these Terms and Conditions.
+                        </p>
+                        <p class="text-tertiary font-light mb-4">
+                            You warrant and represent that:
+                        </p>
+
+                        <ul class="list-none space-y-3 ml-4 mb-4">
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">You are entitled to post the Comments on our website and have all necessary licenses and consents to do so;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">The Comments do not invade any intellectual property rights, including without limitation copyright, patent, or trademark of any third party;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">The Comments do not contain any defamatory, libelous, offensive, indecent, or otherwise unlawful material which is an invasion of privacy;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">The Comments will not be used to solicit or promote business or custom or present commercial activities or unlawful activity.</span>
+                            </li>
+                        </ul>
+
+                        <p class="text-tertiary font-light">
+                            You hereby grant CulinaryQuest a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce, and edit any of your Comments in any and all forms, formats, or media.
+                        </p>
+                    </div>
+                </div>
+                <!-- Hyperlinking Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-link text-white"></i>
+                        </div>
+                        HYPERLINKING TO OUR CONTENT
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            The following organizations may link to our Website without prior written approval:
+                        </p>
+
+                        <ul class="list-none space-y-2 ml-4 mb-4">
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Government agencies;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Search engines;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">News organizations;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Online directory distributors may link to our Website in the same manner as they hyperlink to the Websites of other listed businesses; and</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">System-wide Accredited Businesses except soliciting non-profit organizations, charity shopping malls, and charity fundraising groups which may not hyperlink to our Website.</span>
+                            </li>
+                        </ul>
+
+                        <p class="text-tertiary font-light mb-4">
+                            These organizations may link to our home page, to publications, or to other Website information so long as the link: (a) is not in any way deceptive; (b) does not falsely imply sponsorship, endorsement, or approval of the linking party and its products and/or services; and (c) fits within the context of the linking party's site.
+                        </p>
+
+                        <p class="text-tertiary font-light mb-4">
+                            We may consider and approve other link requests from the following types of organizations:
+                        </p>
+
+                        <ul class="list-none space-y-2 ml-4 mb-4">
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Commonly-known consumer and/or business information sources;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Dot.com community sites;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Associations or other groups representing charities;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Online directory distributors;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Internet portals;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Accounting, law, and consulting firms; and</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Educational institutions and trade associations.</span>
+                            </li>
+                        </ul>
+
+                        <p class="text-tertiary font-light">
+                            If you are one of the organizations listed above and are interested in linking to our website, you must inform us by sending an e-mail to CulinaryQuest. Please include your name, your organization name, contact information as well as the URL of your site, a list of any URLs from which you intend to link to our Website, and a list of the URLs on our site to which you would like to link. Wait 2-3 weeks for a response.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- iFrames Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-window-maximize text-white"></i>
+                        </div>
+                        IFRAMES
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light">
+                            Without prior approval and written permission, you may not create frames around our Web pages that alter in any way the visual presentation or appearance of our Website.
+                        </p>
+                    </div>
+                </div>
+                <!-- Content Liability Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-exclamation-circle text-white"></i>
+                        </div>
+                        CONTENT LIABILITY
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light">
+                            We shall not be held responsible for any content that appears on your Website. You agree to protect and defend us against all claims that arise on your Website. No link(s) should appear on any Website that may be interpreted as libelous, obscene, or criminal, or which infringes, otherwise violates, or advocates the infringement or other violation of, any third-party rights.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Reservation of Rights Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-gavel text-white"></i>
+                        </div>
+                        RESERVATION OF RIGHTS
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light">
+                            We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amend these terms and conditions and its linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Removal of Links Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-unlink text-white"></i>
+                        </div>
+                        REMOVAL OF LINKS FROM OUR WEBSITE
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light">
+                            If you find any link on our Website that is offensive for any reason, you are free to contact and inform us at any moment. We will consider requests to remove links but we are not obligated to or so or to respond to you directly.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Disclaimer Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-thin title-font tracking-widest text-secondary mb-6 flex items-center">
+                        <div class="w-8 h-8 mr-4 bg-primary flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-white"></i>
+                        </div>
+                        DISCLAIMER
+                    </h2>
+                    <div class="bg-white p-8 border border-tertiary">
+                        <p class="text-tertiary font-light mb-4">
+                            To the maximum extent permitted by applicable law, we exclude all representations, warranties, and conditions relating to our website and the use of this website. Nothing in this disclaimer will:
+                        </p>
+
+                        <ul class="list-none space-y-2 ml-4 mb-4">
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Limit or exclude our or your liability for death or personal injury;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Limit or exclude our or your liability for fraud or fraudulent misrepresentation;</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Limit any of our or your liabilities in any way that is not permitted under applicable law; or</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-2 h-2 bg-primary mt-2 mr-3 flex-shrink-0"></div>
+                                <span class="text-tertiary font-light">Exclude any of our or your liabilities that may not be excluded under applicable law.</span>
+                            </li>
+                        </ul>
+
+                        <p class="text-tertiary font-light">
+                            As long as the website and the information and services on the website are provided free of charge, we will not be liable for any loss or damage of any nature.
+                        </p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-tertiary py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo and Copyright -->
+                <div class="mb-6 md:mb-0">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-none bg-primary flex items-center justify-center">
+                            <i class="fas fa-utensils text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-bold text-primary title-font tracking-wider">CULINARY<span class="text-secondary">QUEST</span></span>
+                    </a>
+                    <p class="text-tertiary mt-2">
+                        © 2025 CulinaryQuest. All rights reserved.
+                    </p>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="flex flex-wrap justify-center gap-6">
+                    <a href="/Policy356/" class="text-secondary hover:text-primary transition-colors duration-300">Privacy Policy</a>
+                    <a href="/Service347/" class="text-secondary hover:text-primary transition-colors duration-300">Terms of Use</a>
+                    <a href="/Cookie992/" class="text-secondary hover:text-primary transition-colors duration-300">Cookie Policy</a>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Navigation Menu (Hidden by default) -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="mobile-menu-overlay">
+        <div class="h-full w-64 bg-white p-6 transform translate-x-0">
+            <div class="flex justify-between items-center mb-8">
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-none bg-primary flex items-center justify-center">
+                        <i class="fas fa-utensils text-white text-sm"></i>
+                    </div>
+                    <span class="text-lg font-bold text-primary title-font tracking-wider">CQ</span>
+                </a>
+                <button id="close-mobile-menu" class="text-secondary hover:text-primary transition-colors duration-300">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="flex flex-col space-y-4">
+                <a href="/#hero" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    HOME
+                </a>
+                <a href="/#features" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    FEATURES
+                </a>
+                <a href="/#characters" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    MASTERS
+                </a>
+                <a href="/#destinations" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    DESTINATIONS
+                </a>
+                <a href="/#community" class="text-secondary hover:text-primary py-2 border-b border-tertiary transition-all duration-300">
+                    COMMUNITY
+                </a>
+                <a href="/#download" class="mt-4 px-6 py-2 bg-primary text-white font-bold tracking-wide border border-primary text-center">
+                    DOWNLOAD NOW
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.querySelector('.md\\:hidden');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+            if (mobileMenuButton && mobileMenuOverlay && closeMobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenuOverlay.classList.remove('hidden');
+                });
+
+                closeMobileMenu.addEventListener('click', function() {
+                    mobileMenuOverlay.classList.add('hidden');
+                });
+
+                // Close menu when clicking on mobile navigation links
+                const mobileNavLinks = mobileMenuOverlay.querySelectorAll('nav a');
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenuOverlay.classList.add('hidden');
+                    });
+                });
+            }
+
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+<?php
+$cookieConsentHtml = '
+<style>
+.cookie-consent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 101;
+    background: rgba(119, 131, 119, 0.95); /* Using secondary color with transparency */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    transform: translateY(100%);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border-top: 3px solid #eb737c; /* Using primary color */
+}
+
+.cookie-container {
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.cookie-content {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.cookie-title {
+    font-family: "Orbitron", sans-serif;
+    font-size: 1.1rem;
+    color: #ffffff;
+    font-weight: 300; /* Light font weight */
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-right: 1.5rem;
+    margin-bottom: 0;
+    white-space: nowrap;
+    letter-spacing: 0.1em; /* Added letter spacing for the futuristic look */
+    text-transform: uppercase;
+}
+
+.cookie-title i {
+    color: #eb737c; /* Primary color for icon */
+    font-size: 1.25rem;
+}
+
+.cookie-text {
+    color: #ffffff; /* White text for better contrast */
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 300; /* Light font weight */
+    letter-spacing: 0.02em; /* Slight letter spacing */
+    font-family: "Rajdhani", sans-serif;
+}
+
+.cookie-link {
+    color: #eb737c; /* Primary color for links */
+    text-decoration: none;
+    font-weight: 400;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.cookie-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #eb737c; /* Primary color underline */
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.cookie-link:hover::after {
+    transform: scaleX(1);
+}
+
+.cookie-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.cookie-button-reject,
+.cookie-button-accept {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.85rem;
+    font-weight: 300; /* Light font weight */
+    font-family: "Rajdhani", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 0; /* Removed rounded corners for minimalist style */
+    letter-spacing: 0.05em; /* Letter spacing for buttons */
+    text-transform: uppercase;
+}
+
+.cookie-button-reject {
+    background: transparent; /* Transparent background */
+    color: #ffffff;
+    border: 1px solid #ffffff; /* Thin white border */
+}
+
+.cookie-button-reject:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    border-color: #eb737c; /* Primary color on hover */
+}
+
+.cookie-button-accept {
+    background: #eb737c; /* Primary color button */
+    color: #ffffff; /* White text */
+    border: 1px solid #eb737c;
+    font-weight: 300;
+}
+
+.cookie-button-accept:hover {
+    background: transparent;
+    color: #eb737c;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+    .cookie-container {
+        flex-direction: column;
+        padding: 1.25rem;
+    }
+
+    .cookie-content {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 1.25rem;
+        width: 100%;
+    }
+
+    .cookie-title {
+        margin-bottom: 0.75rem;
+    }
+
+    .cookie-buttons {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 576px) {
+    .cookie-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+    
+    .cookie-button-reject,
+    .cookie-button-accept {
+        width: 100%;
+        text-align: center;
+    }
+}
+</style>
+<div id="cookieConsent" class="cookie-consent">
+    <div class="cookie-container">
+        <div class="cookie-content">
+            <h3 class="cookie-title">
+                <i class="fas fa-cookie-bite"></i>
+                Cookie Policy
+            </h3>
+            <p class="cookie-text">
+                CulinaryQuest uses cookies to enhance your gaming experience. By continuing to use our website, you agree to the use of cookies. For more information, you can read our
+                <a href="/Policy356/" class="cookie-link">Privacy Policy</a>,
+                <a href="/Service347/" class="cookie-link">Terms of Service</a>,
+                and
+                <a href="/Cookie992/" class="cookie-link">Cookie Policy</a>.
+            </p>
+        </div>
+        
+        <div class="cookie-buttons">
+            <button id="rejectCookies" class="cookie-button-reject">
+                Reject
+            </button>
+            <button id="acceptCookies" class="cookie-button-accept">
+                Accept
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+   const cookieConsent = document.getElementById("cookieConsent");
+   const acceptBtn = document.getElementById("acceptCookies");
+   const rejectBtn = document.getElementById("rejectCookies");
+   
+   if (!getCookie("aprenderd_cookie_consent")) {
+       setTimeout(() => {
+           cookieConsent.style.transform = "translateX(0)";
+       }, 1000);
+   }
+
+   function getCookie(name) {
+       let matches = document.cookie.match(new RegExp(
+           "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"
+       ));
+       return matches ? decodeURIComponent(matches[1]) : undefined;
+   }
+   
+   function setCookie(name, value, days) {
+       const date = new Date();
+       date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+       const expires = "; expires=" + date.toUTCString();
+       document.cookie = name + "=" + value + expires + "; path=/; SameSite=Strict; Secure";
+   }
+
+   function handleConsent(consent) {
+       setCookie("aprenderd_cookie_consent", consent, 365);
+       cookieConsent.style.transform = "translateX(120%)";
+       
+       setTimeout(() => {
+           cookieConsent.remove();
+       }, 500);
+   }
+
+   acceptBtn.addEventListener("click", () => handleConsent("accepted"));
+   rejectBtn.addEventListener("click", () => handleConsent("rejected"));
+});
+</script>
+';
+
+if (!isset($_COOKIE["aprenderd_cookie_consent"])) {
+    echo $cookieConsentHtml;
+}
+?>
